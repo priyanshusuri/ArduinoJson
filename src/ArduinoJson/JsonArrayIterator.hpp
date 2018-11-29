@@ -48,7 +48,7 @@ class JsonArrayIterator {
   }
 
   JsonArrayIterator &operator++() {
-    _slot = _slot->next;
+    _slot = _slot->getNext();
     return *this;
   }
 
@@ -103,7 +103,7 @@ class JsonArrayConstIterator {
   }
 
   JsonArrayConstIterator &operator++() {
-    _slot = _slot->next;
+    _slot = _slot->getNext();
     return *this;
   }
 

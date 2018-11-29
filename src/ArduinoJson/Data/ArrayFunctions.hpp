@@ -19,8 +19,8 @@ inline JsonVariantData* arrayAdd(JsonArrayData* arr, MemoryPool* pool) {
   slot->value.type = JSON_NULL;
 
   if (arr->tail) {
-    slot->prev = arr->tail;
-    arr->tail->next = slot;
+    slot->setPrev(arr->tail);
+    arr->tail->setNext(slot);
     arr->tail = slot;
   } else {
     slot->prev = 0;
@@ -46,13 +46,13 @@ inline void arrayRemove(JsonArrayData* arr, VariantSlot* slot) {
   if (!arr || !slot) return;
 
   if (slot->prev)
-    slot->prev->next = slot->next;
+    slot->getPrev()->setNext(slot->getNext());
   else
-    arr->head = slot->next;
+    arr->head = slot->getNext();
   if (slot->next)
-    slot->next->prev = slot->prev;
+    slot->getNext()->setPrev(slot->getPrev());
   else
-    arr->tail = slot->prev;
+    arr->tail = slot->getPrev();
 }
 
 inline void arrayRemove(JsonArrayData* arr, size_t index) {
@@ -71,7 +71,7 @@ inline bool arrayCopy(JsonArrayData* dst, const JsonArrayData* src,
                       MemoryPool* pool) {
   if (!dst || !src) return false;
   arrayClear(dst);
-  for (VariantSlot* s = src->head; s; s = s->next) {
+  for (VariantSlot* s = src->head; s; s = s->getNext()) {
     if (!variantCopy(arrayAdd(dst, pool), &s->value, pool)) return false;
   }
   return true;
@@ -88,8 +88,8 @@ inline bool arrayEquals(const JsonArrayData* a1, const JsonArrayData* a2) {
     if (s1 == s2) return true;
     if (!s1 || !s2) return false;
     if (!variantEquals(&s1->value, &s2->value)) return false;
-    s1 = s1->next;
-    s2 = s2->next;
+    s1 = s1->getNext();
+    s2 = s2->getNext();
   }
 }
 
