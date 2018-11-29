@@ -5,10 +5,11 @@
 #pragma once
 
 #include "../Data/JsonVariantData.hpp"
+#include "../Polyfills/type_traits.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-typedef short VariantSlotDiff;
+typedef conditional<sizeof(void*) <= 2, int8_t, int16_t>::type VariantSlotDiff;
 
 struct VariantSlot {
   JsonVariantData value;
